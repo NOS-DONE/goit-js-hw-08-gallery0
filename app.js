@@ -5,9 +5,10 @@ const lightboxRef = document.querySelector('.js-lightbox');
 const closeButtonRef = document.querySelector('button[data-action="close-lightbox"]');
 const lightboxImageRef = document.querySelector('.lightbox__image');
 const onBackdropClick = document.querySelector('.lightbox__overlay');
+let activeIndex;
 
 galleryitems.map((item, index) => {
-  // console.log(index);
+  console.log(index);
   // console.log(item.original);
   // console.log(galleryitems[index].original);
 
@@ -33,7 +34,7 @@ galleryitems.map((item, index) => {
 });
 
 
-let activeIndex;
+
 
 onBackdropClick.addEventListener('click', closeLightboxModal);
 closeButtonRef.addEventListener('click', closeLightboxModal)
@@ -42,15 +43,19 @@ galleryUlRef.addEventListener('click', openLightboxModal);
 
 
 function openLightboxModal(event) {
-    event.preventDefault();
+  event.preventDefault();
+  console.log(event.target.dataset.index);
+  console.dir(lightboxImageRef);
+
 
     if (event.target.nodeName === 'IMG') {
         lightboxImageRef.src = event.target.dataset.source;
         lightboxRef.classList.add('is-open');
         window.addEventListener('keydown', onEscapeClick);
         window.addEventListener('keydown', onLeftArrow);
+        window.addEventListener('keydown', onRightArrow);
 
-      activeIndex = event.target.dataset.index
+     activeIndex = event.target.dataset.index
       // console.log(activeIndex)
     }
 }
@@ -69,6 +74,26 @@ function onEscapeClick(event) {
         }
 }
 
+
+
+function onRightArrow(event) {
+  if (event.code === 'ArrowRight') {
+    // console.log(event);
+    console.log(lightboxImageRef.src);
+    console.log(activeIndex)
+    console.log(galleryitems[activeIndex].original)
+    
+
+    // if (activeIndex) {
+      lightboxImageRef.src = galleryitems[activeIndex - 1].original;
+      console.log(lightboxImageRef.src);
+      activeIndex -= 1;
+    // }
+
+
+    }
+}
+
 function onLeftArrow(event) {
   if (event.code === 'ArrowLeft') {
     // console.log(event);
@@ -77,9 +102,11 @@ function onLeftArrow(event) {
     console.log(galleryitems[activeIndex].original)
     
 
-
-    lightboxImageRef.src = galleryitems[activeIndex - 1].original;
-    console.log(lightboxImageRef.src);
+    if (activeIndex === lightboxImageRef.dataset.index) {
+      lightboxImageRef.src = galleryitems[activeIndex + 1].original;
+      console.log(lightboxImageRef.src);
+      activeIndex += 1;
+    }
 
 
     }
